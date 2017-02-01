@@ -1,0 +1,497 @@
+campus-026-069[ClimateRefuge-51]>wget http://www.hprcc.unl.edu/products/maps/acis/7dPDataUS.png
+--2017-01-31 13:15:27--  http://www.hprcc.unl.edu/products/maps/acis/7dPDataUS.png
+Resolving www.hprcc.unl.edu... 129.93.168.149
+Connecting to www.hprcc.unl.edu|129.93.168.149|:80... connected.
+HTTP request sent, awaiting response... 200 OK
+Length: 15551 (15K) [image/png]
+Saving to: ‘7dPDataUS.png’
+
+100%[======================================>] 15,551      --.-K/s   in 0.07s   
+
+2017-01-31 13:15:28 (217 KB/s) - ‘7dPDataUS.png’ saved [15551/15551]
+
+campus-026-069[ClimateRefuge-52]>R
+
+R Under development (unstable) (2016-06-30 r70858) -- "Unsuffered Consequences"
+Copyright (C) 2016 The R Foundation for Statistical Computing
+Platform: x86_64-apple-darwin15.2.0 (64-bit)
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+  Natural language support but running in an English locale
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+PID = 5561 
+Time = 2017-01-31 13:36:08 
+Dir = /Users/duncan/DSI/ClimateRefuge 
+1> u = "https://www.st.nmfs.noaa.gov/SASStoredProcess/do?"
+2> library(RCurl)
+3> library(XML)
+4> txt = getURLContent(u)
+5> nchar(txt)
+integer(0)
+6> txt = getURLContent(u, verbose = TRUE, followlocation = TRUE)
+*   Trying 155.206.14.35...
+* Connected to www.st.nmfs.noaa.gov (155.206.14.35) port 443 (#0)
+* TLS 1.2 connection using TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+* Server certificate: www.st.nmfs.noaa.gov
+* Server certificate: Symantec Class 3 Secure Server CA - G4
+* Server certificate: VeriSign Class 3 Public Primary Certification Authority - G5
+> GET /SASStoredProcess/do? HTTP/1.1
+Host: www.st.nmfs.noaa.gov
+Accept: */*
+
+< HTTP/1.1 302 Moved Temporarily
+< Date: Tue, 31 Jan 2017 21:26:23 GMT
+< Server: Apache-Coyote/1.1
+< X-Powered-By: Servlet 2.4; JBoss-4.2.0.GA (build: SVNTag=JBoss_4_2_0_GA date=200705111440)/Tomcat-5.5
+< Location: https://www.st.nmfs.noaa.gov:443/SASLogon/index.jsp?_sasapp=Stored+Process+Web+App+9.2&
+< Content-Length: 0
+< Content-Type: text/html; charset=UTF-8
+< Content-Language: en
+< Set-Cookie: JSESSIONID=4D225366501244D1154E31545A57DD9C; Path=/;HttpOnly;Secure
+< Connection: close
+< 
+* Closing connection 0
+* Issue another request to this URL: 'https://www.st.nmfs.noaa.gov:443/SASLogon/index.jsp?_sasapp=Stored+Process+Web+App+9.2&'
+* Hostname www.st.nmfs.noaa.gov was found in DNS cache
+*   Trying 155.206.14.35...
+* Connected to www.st.nmfs.noaa.gov (155.206.14.35) port 443 (#1)
+* SSL re-using session ID
+* TLS 1.2 connection using TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+* Server certificate: www.st.nmfs.noaa.gov
+* Server certificate: Symantec Class 3 Secure Server CA - G4
+* Server certificate: VeriSign Class 3 Public Primary Certification Authority - G5
+> GET /SASLogon/index.jsp?_sasapp=Stored+Process+Web+App+9.2& HTTP/1.1
+Host: www.st.nmfs.noaa.gov
+Accept: */*
+
+< HTTP/1.1 200 OK
+< Date: Tue, 31 Jan 2017 21:26:23 GMT
+< Server: Apache-Coyote/1.1
+< X-Powered-By: Servlet 2.4; JBoss-4.2.0.GA (build: SVNTag=JBoss_4_2_0_GA date=200705111440)/Tomcat-5.5
+< Content-Type: text/html;charset=UTF-8
+< Content-Language: en
+< Set-Cookie: JSESSIONID=D08CAA41CC654E1A68E815F43DD766E4; Path=/;HttpOnly;Secure
+< Connection: close
+< Transfer-Encoding: chunked
+< 
+* Closing connection 1
+7> nchar(txt)
+[1] 12791
+8> doc = htmlParse(txt)
+9> sel = getNodeSet(doc, "//select")
+10> length(sel)
+[1] 0
+11> cat(txt, file = "bob.html")
+12> Open("bob.html")
+13> doc = htmlParse("Marine Recreational Information Program Query Index.html")
+14> sel = getNodeSet(doc, "//select")
+15> length(sel)
+[1] 11
+16> sel[[1]]
+<select name="qyearfrom" id="qyearfrom">
+  <option selected="selected">2016</option>
+  <option>2015</option>
+  <option>2014</option>
+  <option>2013</option>
+  <option>2012</option>
+  <option>2011</option>
+  <option>2010</option>
+  <option>2009</option>
+  <option>2008</option>
+  <option>2007</option>
+  <option>2006</option>
+  <option>2005</option>
+  <option>2004</option>
+  <option>2003</option>
+  <option>2002</option>
+  <option>2001</option>
+  <option>2000</option>
+  <option>1999</option>
+  <option>1998</option>
+  <option>1997</option>
+  <option>1996</option>
+  <option>1995</option>
+  <option>1994</option>
+  <option>1993</option>
+  <option>1992</option>
+  <option>1991</option>
+  <option>1990</option>
+  <option>1989</option>
+  <option>1988</option>
+  <option>1987</option>
+  <option>1986</option>
+  <option>1985</option>
+  <option>1984</option>
+  <option>1983</option>
+  <option>1982</option>
+  <option>1981</option>
+</select> 
+17> sapply(sel, xmlGetAttr, "name")
+ [1] "qyearfrom"    "qyearto"      "qsummary"     "qwave"        "qstate"       "qspecies"     "qmode_fx"     "qarea_x"      "qcatch_type"  "qdata_type"   "qoutput_type"
+18> getNodeSet(sel[[1]], ".//option")
+[[1]]
+<option selected="selected">2016</option> 
+
+[[2]]
+<option>2015</option> 
+
+[[3]]
+<option>2014</option> 
+
+[[4]]
+<option>2013</option> 
+
+[[5]]
+<option>2012</option> 
+
+[[6]]
+<option>2011</option> 
+
+[[7]]
+<option>2010</option> 
+
+[[8]]
+<option>2009</option> 
+
+[[9]]
+<option>2008</option> 
+
+[[10]]
+<option>2007</option> 
+
+[[11]]
+<option>2006</option> 
+
+[[12]]
+<option>2005</option> 
+
+[[13]]
+<option>2004</option> 
+
+[[14]]
+<option>2003</option> 
+
+[[15]]
+<option>2002</option> 
+
+[[16]]
+<option>2001</option> 
+
+[[17]]
+<option>2000</option> 
+
+[[18]]
+<option>1999</option> 
+
+[[19]]
+<option>1998</option> 
+
+[[20]]
+<option>1997</option> 
+
+[[21]]
+<option>1996</option> 
+
+[[22]]
+<option>1995</option> 
+
+[[23]]
+<option>1994</option> 
+
+[[24]]
+<option>1993</option> 
+
+[[25]]
+<option>1992</option> 
+
+[[26]]
+<option>1991</option> 
+
+[[27]]
+<option>1990</option> 
+
+[[28]]
+<option>1989</option> 
+
+[[29]]
+<option>1988</option> 
+
+[[30]]
+<option>1987</option> 
+
+[[31]]
+<option>1986</option> 
+
+[[32]]
+<option>1985</option> 
+
+[[33]]
+<option>1984</option> 
+
+[[34]]
+<option>1983</option> 
+
+[[35]]
+<option>1982</option> 
+
+[[36]]
+<option>1981</option> 
+
+attr(,"class")
+[1] "XMLNodeSet"
+19>  getNodeSet(doc, "//select/@name")
+[[1]]
+       name 
+"qyearfrom" 
+attr(,"class")
+[1] "XMLAttributeValue"
+
+[[2]]
+     name 
+"qyearto" 
+attr(,"class")
+[1] "XMLAttributeValue"
+
+[[3]]
+      name 
+"qsummary" 
+attr(,"class")
+[1] "XMLAttributeValue"
+
+[[4]]
+   name 
+"qwave" 
+attr(,"class")
+[1] "XMLAttributeValue"
+
+[[5]]
+    name 
+"qstate" 
+attr(,"class")
+[1] "XMLAttributeValue"
+
+[[6]]
+      name 
+"qspecies" 
+attr(,"class")
+[1] "XMLAttributeValue"
+
+[[7]]
+      name 
+"qmode_fx" 
+attr(,"class")
+[1] "XMLAttributeValue"
+
+[[8]]
+     name 
+"qarea_x" 
+attr(,"class")
+[1] "XMLAttributeValue"
+
+[[9]]
+         name 
+"qcatch_type" 
+attr(,"class")
+[1] "XMLAttributeValue"
+
+[[10]]
+        name 
+"qdata_type" 
+attr(,"class")
+[1] "XMLAttributeValue"
+
+[[11]]
+          name 
+"qoutput_type" 
+attr(,"class")
+[1] "XMLAttributeValue"
+
+attr(,"class")
+[1] "XMLNodeSet"
+20> sel[[1]]
+<select name="qyearfrom" id="qyearfrom">
+  <option selected="selected">2016</option>
+  <option>2015</option>
+  <option>2014</option>
+  <option>2013</option>
+  <option>2012</option>
+  <option>2011</option>
+  <option>2010</option>
+  <option>2009</option>
+  <option>2008</option>
+  <option>2007</option>
+  <option>2006</option>
+  <option>2005</option>
+  <option>2004</option>
+  <option>2003</option>
+  <option>2002</option>
+  <option>2001</option>
+  <option>2000</option>
+  <option>1999</option>
+  <option>1998</option>
+  <option>1997</option>
+  <option>1996</option>
+  <option>1995</option>
+  <option>1994</option>
+  <option>1993</option>
+  <option>1992</option>
+  <option>1991</option>
+  <option>1990</option>
+  <option>1989</option>
+  <option>1988</option>
+  <option>1987</option>
+  <option>1986</option>
+  <option>1985</option>
+  <option>1984</option>
+  <option>1983</option>
+  <option>1982</option>
+  <option>1981</option>
+</select> 
+21> xpathSApply(sel[[3]], ".//option", xmlValue)
+[1] "ANNUAL"      "BY WAVE"     "CUMULATIVE"  "SINGLE WAVE"
+22> sel[[3]]
+<select name="qsummary" id="qsummary" onchange="toggle('qsummary')">
+  <option selected="selected" value="annual">ANNUAL</option>
+  <option value="bywave">BY WAVE</option>
+  <option value="cumulative">CUMULATIVE</option>
+  <option value="single">SINGLE WAVE</option>
+</select> 
+23> library(RHTMLForms)
+24> f = getHTMLFormDescription("http://www.hprcc.unl.edu/maps.php?map=ACISClimateMaps")
+25> length(f)
+[1] 0
+26> source("parms")
+*   Trying 155.206.14.35...
+* Connected to www.st.nmfs.noaa.gov (155.206.14.35) port 443 (#0)
+* TLS 1.2 connection using TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+* Server certificate: www.st.nmfs.noaa.gov
+* Server certificate: Symantec Class 3 Secure Server CA - G4
+* Server certificate: VeriSign Class 3 Public Primary Certification Authority - G5
+> POST /SASStoredProcess/do? HTTP/1.1
+Host: www.st.nmfs.noaa.gov
+Accept: */*
+Content-Length: 455
+Content-Type: application/x-www-form-urlencoded
+
+* upload completely sent off: 455 out of 455 bytes
+< HTTP/1.1 200 OK
+< Date: Tue, 31 Jan 2017 21:45:38 GMT
+< Server: Apache-Coyote/1.1
+< X-Powered-By: Servlet 2.4; JBoss-4.2.0.GA (build: SVNTag=JBoss_4_2_0_GA date=200705111440)/Tomcat-5.5
+< Content-Type: text/html;charset=windows-1252
+< Content-Language: en
+< Set-Cookie: JSESSIONID=9EA7BF71B29A5B0E369F62F54627C12F; Path=/;HttpOnly;Secure
+< Connection: close
+< Transfer-Encoding: chunked
+< 
+* Closing connection 0
+27> tt
+[1] "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\">\n<html>\n<head>\n<meta name=\"Generator\" content=\"SAS Software Version 9.2, see www.sas.com\">\n<title>MRIP QUERY OUTPUT</title>\n<style type=\"text/css\">\n<!--\n.AlignContents\n{\n  font-family: 'Trebuchet MS', Helvetica, Arial, 'Albany AMT', sans-serif;\n  font-size: 12pt;\n  font-weight: normal;\n  font-style: normal;\n  color: #000000;\n  background-color: transparent;\n  margin-left: 0px;\n  margin-right: 0px;\n  margin-top: 0px;\n  margin-bottom: 0px;\n  padding: 5px;\n  border-spacing: 0px;\n  border: 0px solid #000000;\n  text-align: left;\n  vertical-align: middle;\n}\n.batch\n{\n  font-family: 'Courier New', Courier, fixed;\n  font-size: 9pt;\n  font-weight: bold;\n  font-style: normal;\n  color: #000000;\n  background-color: #FFFFFF;\n  margin-left: 0px;\n  margin-right: 0px;\n  margin-top: 0px;\n  margin-bottom: 0px;\n  padding: 3px;\n  border-spacing: 0px;\n  border-top-width: 2px;\n  border-right-width: 1px;\n  border-bottom-width: 1px;\n  border-left-width: 2px;\n  border-color: #3872AC;\n  border-style: solid;\n  vertical-align: middle;\n}\n.Body\n{\n  font-family: 'Trebuchet MS', Helvetica, Arial, 'Albany AMT', sans-serif;\n  font-size: 12pt;\n  font-weight: normal;\n  font-style: normal;\n  color: #000000;\n  background-color: #FFFFFF;\n  margin-left: 0px;\n  margin-right: 0px;\n  margin-top: 0px;\n  margin-bottom: 0px;\n  padding: 5px;\n  border-spacing: 0px;\n  border: 0px solid #000000;\n}\n.BodyText\n{\n  font-family: Arial, 'Albany AMT', sans-serif;\n  font-size: 9pt;\n  font-weight: bold;\n  color: #000000;\n  padding: 0px;\n}\n.Cell\n{\n  font-family: 'Trebuchet MS', Helvetica, Arial, 'Albany AMT', sans-serif;\n  font-size: 12pt;\n  font-weight: normal;\n  font-style: normal;\n  color: #000000;\n  background-color: transparent;\n  margin-left: 0px;\n  margin-right: 0px;\n  margin-top: 0px;\n  margin-bottom: 0px;\n  padding: 5px;\n  border-spacing: 0px;\n  border: 0px solid #000000;\n}\n.Column\n{\n  font-family: Arial, 'Albany AMT', sans-serif;\n  font-size: 9pt;\n  font-weight: bold;\n  font-style: normal;\n  color: #000000;\n  background-color: #FFFFFF;\n  margin-left: 0px;\n  margin-right: 0px;\n  margin-top: 0px;\n  margin-bottom: 0px;\n  padding: 3px;\n  border-spacing: 0px;\n  border-top-width: 2px;\n  border-right-width: 1px;\n  border-bottom-width: 1px;\n  border-left-width: 2px;\n  border-color: #3872AC;\n  border-style: solid;\n  vertical-align: middle;\n}\n.Container\n{\n  font-family: 'Trebuchet MS', Helvetica, Arial, 'Albany AMT', sans-serif;\n  font-size: 12pt;\n  font-weight: normal;\n  font-style: normal;\n  color: #000000;\n  background-color: transparent;\n  margin-left: 0px;\n  margin-right: 0px;\n  margin-top: 0px;\n  margin-bottom: 0px;\n  padding: 5px;\n  border-spacing: 0px;\n  border: 0px solid #000000;\n}\n.ContentItem\n{\n  font-family: 'Trebuchet MS', Helvetica, Arial, 'Albany AMT', sans-serif;\n  font-size: 10pt;\n}\n.ContentProcLabel\n{\n  font-family: 'Trebuchet MS', Helvetica, Arial, 'Albany AMT', sans-serif;\n  font-size: 12pt;\n  font-weight: normal;\n  font-style: normal;\n  color: #000000;\n  background-color: transparent;\n  margin-left: 0px;\n  margin-right: 0px;\n  margin-top: 0px;\n  margin-bottom: 0px;\n  padding: 5px;\n  border-spacing: 0px;\n  border: 0px solid #000000;\n}\n.ContentProcName\n{\n  font-family: 'Trebuchet MS', Helvetica, Arial, 'Albany AMT', sans-serif;\n  font-size: 12pt;\n  font-weight: normal;\n  font-style: normal;\n  color: #000000;\n  background-color: transparent;\n  margin-left: 0px;\n  margin-right: 0px;\n  margin-top: 0px;\n  margin-bottom: 0px;\n  padding: 5px;\n  border-spacing: 0px;\n  border: 0px solid #000000;\n}\n.Contents\n{\n  color: #000000;\n  background-color: #EEEAC1;\n  margin-left: 8px;\n  margin-right: 8px;\n  list-style-type: decimal;\n}\n.ContentsDate\n{\n  font-family: 'Trebuchet MS', Helvetica, Arial, 'Albany AMT', sans-serif;\n  font-size: 12pt;\n  font-weight: normal;\n  font-style: normal;\n  color: #000000;\n  background-color: #FFFFFF;\n  margin-left: 0px;\n  margin-right: 0px;\n  margin-top: 0px;\n  margin-bottom: 0px;\n  padding: 5px;\n  border-spacing: 0px;\n  border: 0px solid #000000;\n  width: 100%;\n}\n.ContentTitle\n{\n  font-family: 'Trebuchet MS', Helvetica, Arial, 'Albany AMT', sans-serif;\n  font-size: 12pt;\n  font-weight: normal;\n  font-style: italic;\n  color: #000000;\n  background-color: transparent;\n  margin-left: 0px;\n  margin-right: 0px;\n  margin-top: 0px;\n  margin-bottom: 0px;\n  padding: 5px;\n  border-spacing: 0px;\n  border: 0px solid #000000;\n}\n.Continued\n{\n  font-family: 'Trebuchet MS', Helvetica, Arial, 'Albany AMT', sans-serif;\n  font-size: 12pt;\n  font-weight: normal;\n  font-style: normal;\n  color: #000000;\n  background-color: transparent;\n  margin-left: 0px;\n  margin-right: 0px;\n  margin-top: 0px;\n  margin-bottom: 0px;\n  padding: 5px;\n  border-spacing: 0px;\n  border: 0px solid #000000;\n}\n.Data\n{\n  font-family: Arial, 'Albany AMT', Helvetica, sans-serif;\n  font-size: 8pt;\n  font-weight: normal;\n  font-style: normal;\n  color: #000000;\n  background-color: #FFFFFF;\n  margin-left: 0px;\n  margin-right: 0px;\n  margin-top: 0px;\n  margin-bottom: 0px;\n  padding: 3px;\n  border-spacing: 0px;\n  border-top-width: 0px;\n  border-right-width: 1px;\n  border-bottom-width: 1px;\n  border-left-width: 0px;\n  border-color: #AAC1D9;\n  border-style: solid;\n}\n.dataemphasis\n{\n  font-family: Arial, 'Albany AMT', Helvetica, sans-serif;\n  font-size: 8pt;\n  font-weight: normal;\n  font-style: italic;\n  color: #000000;\n  background-color: #FFFFFF;\n  margin-left: 0px;\n  margin-right: 0px;\n  margin-top: 0px;\n  margin-bottom: 0px;\n  padding: 3px;\n  border-spacing: 0px;\n  border-top-width: 0px;\n  border-right-width: 1px;\n  border-bottom-width: 1px;\n  border-left-width: 0px;\n  border-color: #AAC1D9;\n  border-style: solid;\n}\n.DataEmphasisFixed\n{\n  font-family: Arial, 'Albany AMT', Helvetica, sans-serif;\n  font-size: 8pt;\n  font-weight: normal;\n  font-style: italic;\n  color: #000000;\n  background-color: #FFFFFF;\n  margin-left: 0px;\n  margin-right: 0px;\n  margin-top: 0px;\n  margin-bottom: 0px;\n  padding: 3px;\n  border-spacing: 0px;\n  border-top-width: 0px;\n  border-right-width: 1px;\n  border-bottom-width: 1px;\n  border-left-width: 0px;\n  border-color: #AAC1D9;\n  border-style: solid;\n}\n.dataempty\n{\n  font-family: Arial, 'Albany AMT', Helvetica, sans-serif;\n  font-size: 8pt;\n  font-weight: normal;\n  font-style: normal;\n  color: #000000;\n  background-color: #FFFFFF;\n  margin-left: 0px;\n  margin-right: 0px;\n  margin-top: 0px;\n  margin-bottom: 0px;\n  padding: 3px;\n  border-spacing: 0px;\n  border-top-width: 0px;\n  border-right-width: 1px;\n  border-bottom-width: 1px;\n  border-left-width: 0px;\n  border-color: #AAC1D9;\n  border-style: solid;\n}\n.datafixed\n{\n  font-family: 'Courier New', Courier, fixed;\n  font-size: 8pt;\n  font-weight: normal;\n  font-style: normal;\n  color: #000000;\n  background-color: #FFFFFF;\n  margin-left: 0px;\n  margin-right: 0px;\n  margin-top: 0px;\n  margin-bottom: 0px;\n  padding: 3px;\n  border-spacing: 0px;\n  border-top-width: 0px;\n  border-right-width: 1px;\n  border-bottom-width: 1px;\n  border-left-width: 0px;\n  border-color: #AAC1D9;\n  border-style: solid;\n}\n.datafixedemphasis\n{\n  font-family: 'Courier New', Courier, fixed;\n  font-size: 8pt;\n  font-weight: normal;\n  font-style: italic;\n  color: #000000;\n  background-color: #FFFFFF;\n  margin-left: 0px;\n  margin-right: 0px;\n  margin-top: 0px;\n  margin-bottom: 0px;\n  padding: 3px;\n  border-spacing: 0px;\n  border-top-width: 0px;\n  border-right-width: 1px;\n  border-bottom-width: 1px;\n  border-left-width: 0px;\n  border-color: #AAC1D9;\n  border-style: solid;\n}\n.datastrong\n{\n  font-family: Arial, 'Albany AMT', Helvetica, sans-serif;\n  font-size: 8pt;\n  font-weight: bold;\n  font-style: normal;\n  color: #000000;\n  background-color: #FFFFFF;\n  margin-left: 0px;\n  margin-right: 0px;\n  margin-top: 0px;\n  margin-bottom: 0px;\n  padding: 3px;\n  border-spacing: 0px;\n  border-top-width: 0px;\n  border-right-width: 1px;\n  border-bottom-width: 1px;\n  border-left-width: 0px;\n  border-color: #AAC1D9;\n  border-style: solid;\n}\n.datastrongfixed\n{\n  font-family: 'Courier New', Courier, fixed;\n  font-size: 8pt;\n  font-weight: bold;\n  font-style: normal;\n  color: #000000;\n  background-color: #FFFFFF;\n  margin-left: 0px;\n  margin-right: 0px;\n  margin-top: 0px;\n  margin-bottom: 0px;\n  padding: 3px;\n  border-spacing: 0px;\n  border-top-width: 0px;\n  border-right-width: 1px;\n  border-bottom-width: 1px;\n  border-left-width: 0px;\n  border-color: #AAC1D9;\n  border-style: solid;\n}\n.Date\n{\n  font-family: 'Trebuchet MS', Helvetica, Arial, 'Albany AMT', sans-serif;\n  font-size: 12pt;\n  font-weight: normal;\n  font-style: normal;\n  color: #000000;\n  background-color: #FFFFFF;\n  margin-left: 0px;\n  margin-right: 0px;\n  margin-top: 0px;\n  margin-bottom: 0px;\n  padding: 5px;\n  border-spacing: 0px;\n  border: 0px solid #000000;\n  width: 100%;\n}\n.Default\n{\n  font-family: 'Trebuchet MS', Helvetica, Arial, 'Albany AMT', sans-serif;\n  font-size: 12pt;\n  font-weight: normal;\n  font-style: normal;\n  color: #000000;\n  background-color: transparent;\n  margin-left: 0px;\n  margin-right: 0px;\n  margin-top: 0px;\n  margin-bottom: 0px;\n  padding: 5px;\n  border-spacing: 0px;\n  border: 0px solid #000000;\n}\n.Document\n{\n}\na:link {\ncolor:#275E94\n}\na:visited {\ncolor:#275E94\n}\na:active {\ncolor:#275E94\n}\n.DrillDetailData\n{\n  font-family: Arial, 'Albany AMT', sans-serif;\n  font-size: 9pt;\n  font-weight: normal;\n  color: #34699E;\n  background-color: #FFFFFF;\n  padding: 0px;\n}\n.DrillDetailHover\n{\n  font-family: Arial, 'Albany AMT', sans-serif;\n  font-size: 9pt;\n  font-weight: normal;\n  color: #34699E;\n  text-decoration: underline;\n  background-color: #FFFFFF;\n  padding: 0px;\n}\n.DropShadowStyle\n{\n  color: #000000;\n  border: 1px solid #3872AC;\n}\n.errorbanner\n{\n  font-family: 'Trebuchet MS', Helvetica, Arial, 'Albany AMT', sans-serif;\n  font-size: 12pt;\n  font-weight: bold;\n  font-style: normal;\n  color: #000000;\n  background-color: transparent;\n  margin-left: 0px;\n  margin-right: 0px;\n  margin-top: 0px;\n  margin-bottom: 0px;\n  padding: 5px;\n  border-spacing: 0px;\n  border: 0px solid #000000;\n}\n.errorcontent\n{\n  font-family: 'Trebuchet MS', Helvetica, Arial, 'Albany AMT', sans-serif;\n  font-size: 12pt;\n  font-weight: normal;\n  font-style: normal;\n  color: #000000;\n  background-color: transparent;\n  margin-left: 0px;\n  margin-right: 0px;\n  margin-top: 0px;\n  margin-bottom: 0px;\n  padding: 5px;\n  border-spacing: 0px;\n  border: 1px solid #000000;\n}\n.errorcontentfixed\n{\n  font-family: 'Courier New', Courier, fixed;\n  font-size: 12pt;\n  font-weight: normal;\n  font-style: normal;\n  color: #000000;\n  background-color: transparent;\n  margin-left: 0px;\n  margin-right: 0px;\n  margin-top: 0px;\n  margin-bottom: 0px;\n  padding: 5px;\n  border-spacing: 0px;\n  border: 1px solid #000000;\n}\n.ExtendedPage\n{\n  font-family: 'Trebuchet MS', Helvetica, Arial, 'Albany AMT', sans-serif;\n  font-size: 12pt;\n  font-weight: normal;\n  font-style: normal;\n  color: #000000;\n  background-color: transparent;\n  margin-left: 0px;\n  margin-right: 0px;\n  margin-top: 0px;\n  margin-bottom: 0px;\n  padding: 5px;\n  border-spacing: 0px;\n  border: 0px solid #000000;\n}\n.fatalbanner\n{\n  font-family: 'Trebuchet MS', Helvetica, Arial, 'Albany AMT', sans-serif;\n  font-size: 12pt;\n  font-weight: bold;\n  font-style: normal;\n  color: #000000;\n  background-color: transparent;\n  margin-left: 0px;\n  margin-right: 0px;\n  margin-top: 0px;\n  margin-bottom: 0px;\n  padding: 5px;\n  border-spacing: 0px;\n  border: 0px solid #000000;\n}\n.fatalcontent\n{\n  font-family: 'Trebuchet MS', Helvetica, Arial, 'Albany AMT', sans-serif;\n  font-size: 12pt;\n  font-weight: normal;\n  font-style: normal;\n  color: #000000;\n  background-color: transparent;\n  margin-left: 0px;\n  margin-right: 0px;\n  margin-top: 0px;\n  margin-bottom: 0px;\n  padding: 5px;\n  border-spacing: 0px;\n  border: 1px solid #000000;\n}\n.fatalcontentfixed\n{\n  font-family: 'Courier New', Courier, fixed;\n  font-size: 12pt;\n  font-weight: normal;\n  font-style: normal;\n  color: #000000;\n  background-color: transparent;\n  margin-left: 0px;\n  margin-right: 0px;\n  margin-top: 0px;\n  margin-bottom: 0px;\n  padding: 5px;\n  border-spacing: 0px;\n  border: 1px solid #000000;\n}\n.FolderAction\n{\n  font-family: 'Trebuchet MS', Helvetica, Arial, 'Albany AMT', sans-serif;\n  font-size: 12pt;\n  font-weight: normal;\n  font-style: normal;\n  color: #000000;\n  background-color: transparent;\n  margin-left: 0px;\n  margin-right: 0px;\n  margin-top: 0px;\n  margin-bottom: 0px;\n  padding: 5px;\n  border-spacing: 0px;\n  border: 0px solid #000000;\n}\n.footer\n{\n  font-family: Arial, 'Albany AMT', sans-serif;\n  font-size: 9pt;\n  font-weight: bold;\n  font-style: normal;\n  color: #000000;\n  background-color: #FAF3D4;\n  margin-left: 0px;\n  margin-right: 0px;\n  margin-top: 0px;\n  margin-bottom: 0px;\n  padding: 3px;\n  border-spacing: 0px;\n  border-top-width: 0px;\n  border-right-width: 1px;\n  border-bottom-width: 1px;\n  border-left-width: 0px;\n  border-color: #AAC1D9;\n  border-style: solid;\n  text-align: center;\n  vertical-align: middle;\n}\n.footeremphasis\n{\n  font-family: Arial, 'Albany AMT', sans-serif;\n  font-size: 9pt;\n  font-weight: bold;\n  font-style: italic;\n  color: #000000;\n  background-color: #FAF3D4;\n  margin-left: 0px;\n  margin-right: 0px;\n  margin-top: 0px;\n  margin-bottom: 0px;\n  padding: 3px;\n  border-spacing: 0px;\n  border-top-width: 0px;\n  border-right-width: 1px;\n  border-bottom-width: 1px;\n  border-left-width: 0px;\n  border-color: #AAC1D9;\n  border-style: solid;\n  text-align: center;\n  vertical-align: middle;\n}\n.footeremphasisfixed\n{\n  font-family: 'Courier New', Courier, fixed;\n  font-size: 9pt;\n  font-weight: bold;\n  font-style: italic;\n  color: #000000;\n  background-color: #FAF3D4;\n  margin-left: 0px;\n  margin-right: 0px;\n  margin-top: 0px;\n  margin-bottom: 0px;\n  padding: 3px;\n  border-spacing: 0px;\n  border-top-width: 0px;\n  border-right-width: 1px;\n  border-bottom-width: 1px;\n  border-left-width: 0px;\n  border-color: #AAC1D9;\n  border-style: solid;\n  text-align: center;\n  vertical-align: middle;\n}\n.footerempty\n{\n  font-family: Arial, 'Albany AMT', sans-serif;\n  font-size: 9pt;\n  font-weight: bold;\n  font-style: normal;\n  color: #000000;\n  background-color: #FAF3D4;\n  margin-left: 0px;\n  margin-right: 0px;\n  margin-top: 0px;\n  margin-bottom: 0px;\n  padding: 3px;\n  border-spacing: 0px;\n  border-top-width: 0px;\n  border-right-width: 1px;\n  border-bottom-width: 1px;\n  border-left-width: 0px;\n  border-color: #AAC1D9;\n  border-style: solid;\n  text-align: center;\n  vertical-align: middle;\n}\n.footerfixed\n{\n  font-family: 'Courier New', Courier, fixed;\n  font-size: 9pt;\n  font-weight: bold;\n  font-style: normal;\n  color: #000000;\n  background-color: #FAF3D4;\n  margin-left: 0px;\n  margin-right: 0px;\n  margin-top: 0px;\n  margin-bottom: 0px;\n  padding: 3px;\n  border-spacing: 0px;\n  border-top-width: 0px;\n  border-right-width: 1px;\n  border-bottom-width: 1px;\n  border-left-width: 0px;\n  border-color: #AAC1D9;\n  border-style: solid;\n  text-align: center;\n  vertical-align: middle;\n}\n.footerstrong\n{\n  font-family: Arial, 'Albany AMT', sans-serif;\n  font-size: 9pt;\n  font-weight: bold;\n  font-style: normal;\n  color: #000000;\n  background-color: #FAF3D4;\n  margin-left: 0px;\n  margin-right: 0px;\n  margin-top: 0px;\n  margin-bottom: 0px;\n  padding: 3px;\n  border-spacing: 0px;\n  border-top-width: 0px;\n  border-right-width: 1px;\n  border-bottom-width: 1px;\n  border-left-width: 0px;\n  border-color: #AAC1D9;\n  border-style: solid;\n  text-align: center;\n  vertical-align: middle;\n}\n.footerstrongfixed\n{\n  font-family: 'Courier New', Courier, fixed;\n  font-size: 9pt;\n  font-weight: bold;\n  font-style: normal;\n  color: #000000;\n  background-color: #FAF3D4;\n  margin-left: 0px;\n  margin-right: 0px;\n  margin-top: 0px;\n  margin-bottom: 0px;\n  padding: 3px;\n  border-spacing: 0px;\n  border-top-width: 0px;\n  border-right-width: 1px;\n  border-bottom-width: 1px;\n  border-left-width: 0px;\n  border-color: #AAC1D9;\n  border-style: solid;\n  text-align: center;\n  vertical-align: middle;\n}\n.Frame\n{\n}\n.Graph\n{\n  border: 1px solid #3872AC;\n}\n.GraphAxisLines\n{\n  color: #003399;\n  border: 1px solid #3872AC;\n}\n.GraphBackground\n{\n  color: #FFFFFF;\n  background-color: #FFFFFF;\n  border: 1px solid #3872AC;\n}\n.GraphBorderLines\n{\n  border: 1px solid #3872AC;\n}\n.GraphCharts\n{\n  border: 1px solid #3872AC;\n}\n.GraphCrumbTrail\n{\n  font-family: Arial, 'Albany AMT', sans-serif;\n  font-size: 8pt;\n  font-weight: normal;\n  padding: 5px;\n  border: 0px solid #3872AC;\n}\n.GraphData1\n{\n  color: #94B7DA;\n  border: 1px solid #3872AC;\n}\n.GraphData10\n{\n  color: #B4BDDB;\n  border: 1px solid #3872AC;\n}\n.GraphData11\n{\n  color: #EEEAC1;\n  border: 1px solid #3872AC;\n}\n.GraphData12\n{\n  color: #91A2A9;\n  border: 1px solid #3872AC;\n}\n.GraphData2\n{\n  color: #B6D2A2;\n  border: 1px solid #3872AC;\n}\n.GraphData3\n{\n  color: #DCC685;\n  border: 1px solid #3872AC;\n}\n.GraphData4\n{\n  color: #9089AD;\n  border: 1px solid #3872AC;\n}\n.GraphData5\n{\n  color: #B6D8EA;\n  border: 1px solid #3872AC;\n}\n.GraphData6\n{\n  color: #D2D2C1;\n  border: 1px solid #3872AC;\n}\n.GraphData7\n{\n  color: #A86B86;\n  border: 1px solid #3872AC;\n}\n.GraphData8\n{\n  color: #61A1A3;\n  border: 1px solid #3872AC;\n}\n.GraphData9\n{\n  color: #A89D74;\n  border: 1px solid #3872AC;\n}\n.GraphDataDefault\n{\n  color: #D7E4F1;\n}\n.GraphFloor\n{\n  color: #FFFFFF;\n  background-color: #FFFFFF;\n  border: 1px solid #3872AC;\n}\n.GraphGridLines\n{\n  color: #ECECEC;\n  border: 1px solid #3872AC;\n}\n.GraphLegendBackground\n{\n  color: #FFFFFF;\n  background-color: #FFFFFF;\n  border: 1px solid #3872AC;\n}\n.GraphOutlines\n{\n  color: #003399;\n  border: 1px solid #3872AC;\n}\n.GraphReference\n{\n  color: #808080;\n  border: 1px solid #3872AC;\n}\n.GraphWalls\n{\n  color: #FFFFFF;\n  background-color: #FFFFFF;\n  border: 1px solid #3872AC;\n}\n.Header\n{\n  font-family: Arial, 'Albany AMT', sans-serif;\n  font-size: 9pt;\n  font-weight: bold;\n  font-style: normal;\n  color: #000000;\n  background-color: #FAF3D4;\n  margin-left: 0px;\n  margin-right: 0px;\n  margin-top: 0px;\n  margin-bottom: 0px;\n  padding: 3px;\n  border-spacing: 0px;\n  border-top-width: 0px;\n  border-right-width: 1px;\n  border-bottom-width: 1px;\n  border-left-width: 0px;\n  border-color: #AAC1D9;\n  border-style: solid;\n  text-align: center;\n  vertical-align: middle;\n}\n.headeremphasis\n{\n  font-family: Arial, 'Albany AMT', sans-serif;\n  font-size: 9pt;\n  font-weight: bold;\n  font-style: italic;\n  color: #000000;\n  background-color: #FAF3D4;\n  margin-left: 0px;\n  margin-right: 0px;\n  margin-top: 0px;\n  margin-bottom: 0px;\n  padding: 3px;\n  border-spacing: 0px;\n  border-top-width: 0px;\n  border-right-width: 1px;\n  border-bottom-width: 1px;\n  border-left-width: 0px;\n  border-color: #AAC1D9;\n  border-style: solid;\n  text-align: center;\n  vertical-align: middle;\n}\n.headeremphasisfixed\n{\n  font-family: 'Courier New', Courier, fixed;\n  font-size: 9pt;\n  font-weight: bold;\n  font-style: italic;\n  color: #000000;\n  background-color: #FAF3D4;\n  margin-left: 0px;\n  margin-right: 0px;\n  margin-top: 0px;\n  margin-bottom: 0px;\n  padding: 3px;\n  border-spacing: 0px;\n  border-top-width: 0px;\n  border-right-width: 1px;\n  border-bottom-width: 1px;\n  border-left-width: 0px;\n  border-color: #AAC1D9;\n  border-style: solid;\n  text-align: center;\n  vertical-align: middle;\n}\n.headerempty\n{\n  font-family: Arial, 'Albany AMT', sans-serif;\n  font-size: 9pt;\n  font-weight: bold;\n  font-style: normal;\n  color: #000000;\n  background-color: #FAF3D4;\n  margin-left: 0px;\n  margin-right: 0px;\n  margin-top: 0px;\n  margin-bottom: 0px;\n  padding: 3px;\n  border-spacing: 0px;\n  border-top-width: 0px;\n  border-right-width: 1px;\n  border-bottom-width: 1px;\n  border-left-width: 0px;\n  border-color: #AAC1D9;\n  border-style: solid;\n  text-align: center;\n  vertical-align: middle;\n}\n.headerfixed\n{\n  font-family: 'Courier New', Courier, fixed;\n  font-size: 9pt;\n  font-weight: bold;\n  font-style: normal;\n  color: #000000;\n  background-color: #FAF3D4;\n  margin-left: 0px;\n  margin-right: 0px;\n  margin-top: 0px;\n  margin-bottom: 0px;\n  padding: 3px;\n  border-spacing: 0px;\n  border-top-width: 0px;\n  border-right-width: 1px;\n  border-bottom-width: 1px;\n  border-left-width: 0px;\n  border-color: #AAC1D9;\n  border-style: solid;\n  text-align: center;\n  vertical-align: middle;\n}\n.HeadersAndFooters\n{\n  font-family: 'Trebuchet MS', Helvetica, Arial, 'Albany AMT', sans-serif;\n  font-size: 12pt;\n  font-weight: normal;\n  font-style: normal;\n  color: #000000;\n  background-color: transparent;\n  margin-left: 0px;\n  margin-right: 0px;\n  margin-top: 0px;\n  margin-bottom: 0px;\n  padding: 5px;\n  border-spacing: 0px;\n  border: 0px solid #000000;\n}\n.headerstrong\n{\n  font-family: Arial, 'Albany AMT', sans-serif;\n  font-size: 9pt;\n  font-weight: bold;\n  font-style: normal;\n  color: #000000;\n  background-color: #FAF3D4;\n  margin-left: 0px;\n  margin-right: 0px;\n  margin-top: 0px;\n  margin-bottom: 0px;\n  padding: 3px;\n  border-spacing: 0px;\n  border-top-width: 0px;\n  border-right-width: 1px;\n  border-bottom-width: 1px;\n  border-left-width: 0px;\n  border-color: #AAC1D9;\n  border-style: solid;\n  text-align: center;\n  vertical-align: middle;\n}\n.headerstrongfixed\n{\n  font-family: 'Courier New', Courier, fixed;\n  font-size: 9pt;\n  font-weight: bold;\n  font-style: normal;\n  color: #000000;\n  background-color: #FAF3D4;\n  margin-left: 0px;\n  margin-right: 0px;\n  margin-top: 0px;\n  margin-bottom: 0px;\n  padding: 3px;\n  border-spacing: 0px;\n  border-top-width: 0px;\n  border-right-width: 1px;\n  border-bottom-width: 1px;\n  border-left-width: 0px;\n  border-color: #AAC1D9;\n  border-style: solid;\n  text-align: center;\n  vertical-align: middle;\n}\n.Heading1\n{\n  font-family: Arial, 'Albany AMT', sans-serif;\n  font-size: 16pt;\n  font-weight: bold;\n  padding: 0px;\n}\n.Heading2\n{\n  font-family: Arial, 'Albany AMT', sans-serif;\n  font-size: 14pt;\n  font-weight: bold;\n  font-style: italic;\n  padding: 0px;\n}\n.Heading3\n{\n  font-family: Arial, 'Albany AMT', sans-serif;\n  font-size: 12pt;\n  font-weight: bold;\n  padding: 0px;\n}\n.IndexAction\n{\n  font-family: 'Trebuchet MS', Helvetica, Arial, 'Albany AMT', sans-serif;\n  font-size: 12pt;\n  font-weight: normal;\n  font-style: normal;\n  color: #000000;\n  background-color: transparent;\n  margin-left: 0px;\n  margin-right: 0px;\n  margin-top: 0px;\n  margin-bottom: 0px;\n  padding: 5px;\n  border-spacing: 0px;\n  border: 0px solid #000000;\n}\n.List\n{\n  font-family: 'Trebuchet MS', Helvetica, Arial, 'Albany AMT', sans-serif;\n  font-size: 12pt;\n  font-weight: normal;\n  font-style: normal;\n  color: #000000;\n  background-color: transparent;\n  margin-left: 0px;\n  margin-right: 0px;\n  margin-top: 0px;\n  margin-bottom: 0px;\n  padding: 5px;\n  border-spacing: 0px;\n  border: 0px solid #000000;\n}\n.List10\n{\n  font-family: 'Trebuchet MS', Helvetica, Arial, 'Albany AMT', sans-serif;\n  font-size: 12pt;\n  font-weight: normal;\n  font-style: normal;\n  color: #000000;\n  background-color: transparent;\n  margin-left: 0px;\n  margin-right: 0px;\n  margin-top: 0px;\n  margin-bottom: 0px;\n  padding: 5px;\n  border-spacing: 0px;\n  border: 0px solid #000000;\n}\n.List2\n{\n  font-family: 'Trebuchet MS', Helvetica, Arial, 'Albany AMT', sans-serif;\n  font-size: 12pt;\n  font-weight: normal;\n  font-style: normal;\n  color: #000000;\n  background-color: transparent;\n  margin-left: 0px;\n  margin-right: 0px;\n  margin-top: 0px;\n  margin-bottom: 0px;\n  padding: 5px;\n  border-spacing: 0px;\n  border: 0px solid #000000;\n}\n.List3\n{\n  font-family: 'Trebuchet MS', Helvetica, Arial, 'Albany AMT', sans-serif;\n  font-size: 12pt;\n  font-weight: normal;\n  font-style: normal;\n  color: #000000;\n  background-color: transparent;\n  margin-left: 0px;\n  margin-right: 0px;\n  margin-top: 0px;\n  margin-bottom: 0px;\n  padding: 5px;\n  border-spacing: 0px;\n  border: 0px solid #000000;\n}\n.List4\n{\n  font-family: 'Trebuchet MS', Helvetica, Arial, 'Albany AMT', sans-serif;\n  font-size: 12pt;\n  font-weight: normal;\n  font-style: normal;\n  color: #000000;\n  background-color: transparent;\n  margin-left: 0px;\n  margin-right: 0px;\n  margin-top: 0px;\n  margin-bottom: 0px;\n  padding: 5px;\n  border-spacing: 0px;\n  border: 0px solid #000000;\n}\n.List5\n{\n  font-family: 'Trebuchet MS', Helvetica, Arial, 'Albany AMT', sans-serif;\n  font-size: 12pt;\n  font-weight: normal;\n  font-style: normal;\n  color: #000000;\n  background-color: transparent;\n  margin-left: 0px;\n  margin-right: 0px;\n  margin-top: 0px;\n  margin-bottom: 0px;\n  padding: 5px;\n  border-spacing: 0px;\n  border: 0px solid #000000;\n}\n.List6\n{\n  font-family: 'Trebuchet MS', Helvetica, Arial, 'Albany AMT', sans-serif;\n  font-size: 12pt;\n  font-weight: normal;\n  font-style: normal;\n  color: #000000;\n  background-color: transparent;\n  margin-left: 0px;\n  margin-right: 0px;\n  margin-top: 0px;\n  margin-bottom: 0px;\n  padding: 5px;\n  border-spacing: 0px;\n  border: 0px solid #000000;\n}\n.List7\n{\n  font-family: 'Trebuchet MS', Helvetica, Arial, 'Albany AMT', sans-serif;\n  font-size: 12pt;\n  font-weight: normal;\n  font-style: normal;\n  color: #000000;\n  background-color: transparent;\n  margin-left: 0px;\n  margin-right: 0px;\n  margin-top: 0px;\n  margin-bottom: 0px;\n  padding: 5px;\n  border-spacing: 0px;\n  border: 0px solid #000000;\n}\n.List8\n{\n  font-family: 'Trebuchet MS', Helvetica, Arial, 'Albany AMT', sans-serif;\n  font-size: 12pt;\n  font-weight: normal;\n  font-style: normal;\n  color: #000000;\n  background-color: transparent;\n  margin-left: 0px;\n  margin-right: 0px;\n  margin-top: 0px;\n  margin-bottom: 0px;\n  padding: 5px;\n  border-spacing: 0px;\n  border: 0px solid #000000;\n}\n.List9\n{\n  font-family: 'Trebuchet MS', Helvetica, Arial, 'Albany AMT', sans-serif;\n  font-size: 12pt;\n  font-weight: normal;\n  font-style: normal;\n  color: #000000;\n  background-color: transparent;\n  margin-left: 0px;\n  margin-right: 0px;\n  margin-top: 0px;\n  margin-bottom: 0px;\n  padding: 5px;\n  border-spacing: 0px;\n  border: 0px solid #000000;\n}\n.ListItem\n{\n  font-family: 'Trebuchet MS', Helvetica, Arial, 'Albany AMT', sans-serif;\n  font-size: 12pt;\n  font-weight: normal;\n  font-style: normal;\n  color: #000000;\n  background-color: transparent;\n  margin-left: 0px;\n  margin-right: 0px;\n  margin-top: 0px;\n  margin-bottom: 0px;\n  padding: 5px;\n  border-spacing: 0px;\n  border: 0px solid #000000;\n}\n.ListItem10\n{\n  font-family: 'Trebuchet MS', Helvetica, Arial, 'Albany AMT', sans-serif;\n  font-size: 12pt;\n  font-weight: normal;\n  font-style: normal;\n  color: #000000;\n  background-color: transparent;\n  margin-left: 0px;\n  margin-right: 0px;\n  margin-top: 0px;\n  margin-bottom: 0px;\n  padding: 5px;\n  border-spacing: 0px;\n  border: 0px solid #000000;\n}\n.ListItem2\n{\n  font-family: 'Trebuchet MS', Helvetica, Arial, 'Albany AMT', sans-serif;\n  font-size: 12pt;\n  font-weight: normal;\n  font-style: normal;\n  color: #000000;\n  background-color: transparent;\n  margin-left: 0px;\n  margin-right: 0px;\n  margin-top: 0px;\n  margin-bottom: 0px;\n  padding: 5px;\n  border-spacing: 0px;\n  border: 0px solid #000000;\n}\n.ListItem3\n{\n  font-family: 'Trebuchet MS', Helvetica, Arial, 'Albany AMT', sans-serif;\n  font-size: 12pt;\n  font-weight: normal;\n  font-style: normal;\n  color: #000000;\n  background-color: transparent;\n  margin-left: 0px;\n  margin-right: 0px;\n  margin-top: 0px;\n  margin-bottom: 0px;\n  padding: 5px;\n  border-spacing: 0px;\n  border: 0px solid #000000;\n}\n.ListItem4\n{\n  font-family: 'Trebuchet MS', Helvetica, Arial, 'Albany AMT', sans-serif;\n  font-size: 12pt;\n  font-weight: normal;\n  font-style: normal;\n  color: #000000;\n  background-color: transparent;\n  margin-left: 0px;\n  margin-right: 0px;\n  margin-top: 0px;\n  margin-bottom: 0px;\n  padding: 5px;\n  border-spacing: 0px;\n  border: 0px solid #000000;\n}\n.ListItem5\n{\n  font-family: 'Trebuchet MS', Helvetica, Arial, 'Albany AMT', sans-serif;\n  font-size: 12pt;\n  font-weight: normal;\n  font-style: normal;\n  color: #000000;\n  background-color: transparent;\n  margin-left: 0px;\n  margin-right: 0px;\n  margin-top: 0px;\n  margin-bottom: 0px;\n  padding: 5px;\n  border-spacing: 0px;\n  border: 0px solid #000000;\n}\n.ListItem6\n{\n  font-family: 'Trebuchet MS', Helvetica, Arial, 'Albany AMT', sans-serif;\n  font-size: 12pt;\n  font-weight: normal;\n  font-style: normal;\n  color: #000000;\n  background-color: transparent;\n  margin-left: 0px;\n  margin-right: 0px;\n  margin-top: 0px;\n  margin-bottom: 0px;\n  padding: 5px;\n  border-spacing: 0px;\n  border: 0px solid #000000;\n}\n.ListItem7\n{\n  font-family: 'Trebuchet MS', Helvetica, Arial, 'Albany AMT', sans-serif;\n  font-size: 12pt;\n  font-weight: normal;\n  font-style: normal;\n  color: #000000;\n  background-color: transparent;\n  margin-left: 0px;\n  margin-right: 0px;\n  margin-top: 0px;\n  margin-bottom: 0px;\n  padding: 5px;\n  border-spacing: 0px;\n  border: 0px solid #000000;\n}\n.ListItem8\n{\n  font-family: 'Trebuchet MS', Helvetica, Arial, 'Albany AMT', sans-serif;\n  font-size: 12pt;\n  font-weight: normal;\n  font-style: normal;\n  color: #000000;\n  background-color: transparent;\n  margin-left: 0px;\n  margin-right: 0px;\n  margin-top: 0px;\n  margin-bottom: 0px;\n  padding: 5px;\n  border-spacing: 0px;\n  border: 0px solid #000000;\n}\n.ListItem9\n{\n  font-family: 'Trebuchet MS', Helvetica, Arial, 'Albany AMT', sans-serif;\n  font-size: 12pt;\n  font-weight: normal;\n  font-style: normal;\n  color: #000000;\n  background-color: transparent;\n  margin-left: 0px;\n  margin-right: 0px;\n  margin-top: 0px;\n  margin-bottom: 0px;\n  padding: 5px;\n  border-spacing: 0px;\n  border: 0px solid #000000;\n}\n.NormalText\n{\n  font-family: Arial, 'Albany AMT', sans-serif;\n  font-size: 12pt;\n  font-weight: bold;\n  padding: 0px;\n}\n.note\n{\n  font-family: 'Trebuchet MS', Helvetica, Arial, 'Albany AMT', sans-serif;\n  font-size: 12pt;\n  font-weight: normal;\n  font-style: normal;\n  color: #000000;\n  background-color: transparent;\n  margin-left: 0px;\n  margin-right: 0px;\n  margin-top: 0px;\n  margin-bottom: 0px;\n  padding: 5px;\n  border-spacing: 0px;\n  border: 0px solid #000000;\n}\n.notebanner\n{\n  font-family: 'Trebuchet MS', Helvetica, Arial, 'Albany AMT', sans-serif;\n  font-size: 12pt;\n  font-weight: bold;\n  font-style: normal;\n  color: #000000;\n  background-color: transparent;\n  margin-left: 0px;\n  margin-right: 0px;\n  margin-top: 0px;\n  margin-bottom: 0px;\n  padding: 5px;\n  border-spacing: 0px;\n  border: 0px solid #000000;\n}\n.notecontent\n{\n  font-family: 'Trebuchet MS', Helvetica, Arial, 'Albany AMT', sans-serif;\n  font-size: 12pt;\n  font-weight: normal;\n  font-style: normal;\n  color: #000000;\n  background-color: transparent;\n  margin-left: 0px;\n  margin-right: 0px;\n  margin-top: 0px;\n  margin-bottom: 0px;\n  padding: 5px;\n  border-spacing: 0px;\n  border: 1px solid #000000;\n}\n.notecontentfixed\n{\n  font-family: 'Courier New', Courier, fixed;\n  font-size: 12pt;\n  font-weight: normal;\n  font-style: normal;\n  color: #000000;\n  background-color: transparent;\n  margin-left: 0px;\n  margin-right: 0px;\n  margin-top: 0px;\n  margin-bottom: 0px;\n  padding: 5px;\n  border-spacing: 0px;\n  border: 1px solid #000000;\n}\n.Pages\n{\n  color: #000000;\n  background-color: #EEEAC1;\n  margin-left: 8px;\n  margin-right: 8px;\n  list-style-type: decimal;\n}\n.PagesDate\n{\n  font-family: 'Trebuchet MS', Helvetica, Arial, 'Albany AMT', sans-serif;\n  font-size: 12pt;\n  font-weight: normal;\n  font-style: normal;\n  color: #000000;\n  background-color: #FFFFFF;\n  margin-left: 0px;\n  margin-right: 0px;\n  margin-top: 0px;\n  margin-bottom: 0px;\n  padding: 5px;\n  border-spacing: 0px;\n  border: 0px solid #000000;\n  width: 100%;\n}\n.PagesItem\n{\n  font-family: 'Trebuchet MS', Helvetica, Arial, 'Albany AMT', sans-serif;\n  font-size: 10pt;\n}\n.PagesProcLabel\n{\n  font-family: 'Trebuchet MS', Helvetica, Arial, 'Albany AMT', sans-serif;\n  font-size: 12pt;\n  font-weight: normal;\n  font-style: normal;\n  color: #000000;\n  background-color: transparent;\n  margin-left: 0px;\n  margin-right: 0px;\n  margin-top: 0px;\n  margin-bottom: 0px;\n  padding: 5px;\n  border-spacing: 0px;\n  border: 0px solid #000000;\n}\n.PagesProcName\n{\n  font-family: 'Trebuchet MS', Helvetica, Arial, 'Albany AMT', sans-serif;\n  font-size: 12pt;\n  font-weight: normal;\n  font-style: normal;\n  color: #000000;\n  background-color: transparent;\n  margin-left: 0px;\n  margin-right: 0px;\n  margin-top: 0px;\n  margin-bottom: 0px;\n  padding: 5px;\n  border-spacing: 0px;\n  border: 0px solid #000000;\n}\n.PagesTitle\n{\n  font-family: 'Tre  C-c C-c
+28> cat(tt, file = "bob.html")
+29> Open("bob.html")
+30> readHTMLTable("bob.html")
+$`NULL`
+                       V1               V2                             V3
+1                                     <NA>                           <NA>
+2  Your Query Parameters:             <NA>                           <NA>
+3                                   Query:         MRIP CATCH TIME SERIES
+4                                    Year:                    1981 - 2016
+5                                    Wave:                         ANNUAL
+6                                 Species:                       ALBACORE
+7                         Geographic Area:                 ATLANTIC COAST
+8                            Fishing Mode:             ALL MODES COMBINED
+9                            Fishing Area:             ALL AREAS COMBINED
+10                          Type of Catch: TOTAL CATCH (TYPE A + B1 + B2)
+11                            Information:                NUMBERS OF FISH
+12   Return to Query Page             <NA>                           <NA>
+
+$`NULL`
+                       V1               V2                             V3
+1  Your Query Parameters:             <NA>                           <NA>
+2                                   Query:         MRIP CATCH TIME SERIES
+3                                    Year:                    1981 - 2016
+4                                    Wave:                         ANNUAL
+5                                 Species:                       ALBACORE
+6                         Geographic Area:                 ATLANTIC COAST
+7                            Fishing Mode:             ALL MODES COMBINED
+8                            Fishing Area:             ALL AREAS COMBINED
+9                           Type of Catch: TOTAL CATCH (TYPE A + B1 + B2)
+10                            Information:                NUMBERS OF FISH
+
+$`NULL`
+   Estimate Status Year Common Name Total Catch (A+B1+B2)   PSE
+1            FINAL 1981    ALBACORE                34,211  35.9
+2            FINAL 1982    ALBACORE                82,916  39.3
+3            FINAL 1983    ALBACORE                75,389  43.1
+4            FINAL 1984    ALBACORE               467,117  32.6
+5            FINAL 1985    ALBACORE                19,965  55.9
+6            FINAL 1986    ALBACORE                41,869    30
+7            FINAL 1987    ALBACORE                94,257  21.5
+8            FINAL 1988    ALBACORE                36,632  27.2
+9            FINAL 1989    ALBACORE                42,757  19.2
+10           FINAL 1990    ALBACORE                43,404  20.4
+11           FINAL 1991    ALBACORE                21,336  21.7
+12           FINAL 1992    ALBACORE                15,457  28.5
+13           FINAL 1993    ALBACORE                32,689  19.8
+14           FINAL 1994    ALBACORE                16,416  25.9
+15           FINAL 1995    ALBACORE                 7,967  46.4
+16           FINAL 1996    ALBACORE                 2,124  57.9
+17           FINAL 1997    ALBACORE                28,138  29.3
+18           FINAL 1998    ALBACORE                30,195  28.2
+19           FINAL 1999    ALBACORE                16,035  46.7
+20           FINAL 2000    ALBACORE                40,601  23.8
+21           FINAL 2001    ALBACORE                17,538  44.7
+22           FINAL 2002    ALBACORE                33,978  32.7
+23           FINAL 2003    ALBACORE                32,451    33
+24           FINAL 2004    ALBACORE                55,495  38.7
+25           FINAL 2005    ALBACORE                14,879  71.6
+26           FINAL 2006    ALBACORE                 5,965  48.8
+27           FINAL 2007    ALBACORE                20,443  47.3
+28           FINAL 2008    ALBACORE                10,662  11.8
+29           FINAL 2009    ALBACORE                 4,491 100.9
+30           FINAL 2011    ALBACORE                 4,412  56.2
+31           FINAL 2012    ALBACORE                 1,075    64
+32           FINAL 2013    ALBACORE                71,899  31.7
+33           FINAL 2014    ALBACORE                 4,620  69.6
+34           FINAL 2015    ALBACORE                 6,937  41.1
+35     PRELIMINARY 2016    ALBACORE                    28 104.4
+
+$`NULL`
+                                                                                                                                                                                               V1   V2
+1                                                                                                           _\t\t\tPSE, or proportional standard error, is automatically included in all outputs. <NA>
+2                                                                                  _It expresses the standard error of an estimate as a percentage of the estimate and is a measure of precision. <NA>
+3                                                                                                                                A PSE value greater than 50 indicates a very imprecise estimate. <NA>
+4                                                                                                                                                                                                     
+5                                                                                                                                                                                                 <NA>
+6                                                                                                                                                                Data Sources by Geographic Area: <NA>
+7                                                                                                                                          &nbsp &nbsp &nbspMRIP: ME-LA, PR, HI (LA through 2013) <NA>
+8                                                                                                                                                                                                 <NA>
+9  If you want to cite a reference for data retrieved from our website, use: Personal communication from the National Marine Fisheries Service, Fisheries Statistics Division January 31, 2017  . <NA>
+10                                                                                                                                                                           Return to Query Page <NA>
+                                                                 V3
+1                                                              <NA>
+2                                                              <NA>
+3                                                              <NA>
+4  A PSE value greater than 50 indicates a very imprecise estimate.
+5                                                              <NA>
+6                                                              <NA>
+7                                                              <NA>
+8                                                              <NA>
+9                                                              <NA>
+10                                                             <NA>
+
+$`NULL`
+NULL
+
+31> 

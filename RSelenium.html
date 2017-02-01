@@ -1,0 +1,244 @@
+<html>
+
+<head>
+<title>Dynamic Content in HTML Documents - Selenium</title>
+<link rel="stylesheet" href="highlight/styles/default.css">
+<script src="highlight/highlight.pack.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+<link xmlns="" rel="stylesheet" href="highlight/rhighlight.css">
+<link rel="stylesheet" href="OmegaTech.css"></link>
+</head>
+
+
+<body>
+<center><h2>Dynamic Content in HTML Documents - Selenium</h2>
+Duncan Temple Lang
+</center>
+
+<p>
+The following is a quick example of using RSelenium, XML, RCurl
+to scrape data.
+</p>
+
+<p>
+When the content of the HTML document is dynamically generated or invoked (e.g. forms
+with code for the action attribute), we cannot scrape the information from the static 
+document we get from the server. Instead, we need a Web browser to process the
+JavaScript code. 
+If the dynamic content is generated once when the document is loaded, we can retrieve
+the resulting HTML  content and scrape it.  We might manually visit the page and save the 
+page (and its related files) to a local file and then process it.
+However, if the content is dynamically updated in response to user interaction, 
+we need to use a different approach.
+We use the same approach for both dynamic situation to remove the manual step.
+Specifically, we can programmatically drive/control a Web browser from within
+R, Python, etc. and mimic user interactions and then extract content from the resulting page.
+We use RSelenium.
+</p>
+
+<p>
+Install the RSelenium package with
+<pre><code class="r">install.packages("RSelenium")</code></pre>
+The package is capable of downloading selenium and starting the selenium server for you.
+You can also run the server via Docker. 
+However, I chose to download and run the server myself (as there were several issues with
+RSelenium installing and running the server itself on my machine. YMMV!)
+So I 
+<ol>
+<li> downloaded selenium version  3.0.1
+from    <a href="http://www.seleniumhq.org/download/">http://www.seleniumhq.org/download/</a>
+<li> downloaded the gecko driver from <a href="https://github.com/mozilla/geckodriver/releases">https://github.com/mozilla/geckodriver/releases</a>
+ and untar'ed that file to get an executable file named geckodriver
+<li> started the server with  the shell command
+<pre><code lang="shell">
+java -Dwebdriver.gecko.driver=`pwd`/geckodriver -jar ~/Downloads/selenium-server-standalone-3.0.1.jar -port 5556 
+</code></pre>
+</ol>
+We can then contact the server on port 5556. (You can select any other port > 1024)
+You should see something like
+<pre>
+18:26:45.207 INFO - Selenium build info: version: '3.0.1', revision: '1969d75'
+18:26:45.208 INFO - Launching a standalone Selenium Server
+2017-01-29 18:26:45.226:INFO::main: Logging initialized @205ms
+18:26:45.285 INFO - Driver provider org.openqa.selenium.ie.InternetExplorerDriver registration is skipped:
+ registration capabilities Capabilities [{ensureCleanSession=true, browserName=internet explorer, version=, platform=WINDOWS}] does not match the current platform MAC
+18:26:45.286 INFO - Driver provider org.openqa.selenium.edge.EdgeDriver registration is skipped:
+ registration capabilities Capabilities [{browserName=MicrosoftEdge, version=, platform=WINDOWS}] does not match the current platform MAC
+18:26:45.286 INFO - Driver class not found: com.opera.core.systems.OperaDriver
+18:26:45.286 INFO - Driver provider com.opera.core.systems.OperaDriver registration is skipped:
+Unable to create new instances on this machine.
+18:26:45.286 INFO - Driver class not found: com.opera.core.systems.OperaDriver
+18:26:45.286 INFO - Driver provider com.opera.core.systems.OperaDriver is not registered
+2017-01-29 18:26:45.324:INFO:osjs.Server:main: jetty-9.2.15.v20160210
+2017-01-29 18:26:45.341:INFO:osjsh.ContextHandler:main: Started o.s.j.s.ServletContextHandler@5dfcfece{/,null,AVAILABLE}
+2017-01-29 18:26:45.364:INFO:osjs.ServerConnector:main: Started ServerConnector@482f8f11{HTTP/1.1}{0.0.0.0:5556}
+2017-01-29 18:26:45.364:INFO:osjs.Server:main: Started @343ms
+18:26:45.364 INFO - Selenium Server is up and running
+</pre>
+in the terminal/console, giving you information about the running server.
+More messages will be displayed there as the server performs tasks we send it from R.
+So this is a good source of information when we experience inexpected behavior.
+</p>
+
+<p>
+Now that the server is up and running, we can use RSelenium to create
+a "headless" browser and tell it to do things.
+We'll create a Firefox browser, connecting to the server on the same port that
+we specified when we started the server:
+<pre><code lang="r">
+library(RSelenium)
+d = remoteDriver(port = 5556, browserName = "firefox")
+d$open()
+</code></pre>
+</p>
+<p>
+Next we instruct that browser (which is separate from any other firefox browser we are already running)
+to visit a URL:
+<pre><code lang="r">
+d$navigate("http://www.goes-r.gov/multimedia/sc_images.html")
+</code></pre>
+Note that d is an instance of the reference  class remoteDriver.
+navigate() is one of its methods.
+We can get information about this and other methods and the class with
+<pre><code lang="r">
+?remoteDriver
+</code></pre>
+We can list the fields and methods of the class with
+<pre><code lang="r">
+getClass(class(d))
+</code></pre>
+or explicitly retrieve the names of the methods with 
+<pre><code lang="r">
+ls(getClass(class(d))@refMethods, all = TRUE)
+</code></pre>
+<pre>
+ [1] ".objectPackage"          ".objectParent"          
+ [3] "acceptAlert"             "addCookie"              
+ [5] "buttondown"              "buttonup"               
+ [7] "callSuper"               "checkError"             
+ [9] "checkStatus"             "click"                  
+[11] "close"                   "closeall"               
+[13] "closeServer"             "closeWindow"            
+[15] "copy"                    "deleteAllCookies"       
+[17] "deleteCookieNamed"       "dismissAlert"           
+[19] "doubleclick"             "errorDetails"           
+[21] "executeAsyncScript"      "executeScript"          
+[23] "export"                  "field"                  
+[25] "findElement"             "findElements"           
+[27] "getActiveElement"        "getAlertText"           
+[29] "getAllCookies"           "getClass"               
+[31] "getCurrentUrl"           "getCurrentWindowHandle" 
+[33] "getLogTypes"             "getPageSource"          
+[35] "getRefClass"             "getSession"             
+[37] "getSessions"             "getStatus"              
+[39] "getTitle"                "getWindowHandles"       
+[41] "getWindowPosition"       "getWindowSize"          
+[43] "goBack"                  "goForward"              
+[45] "import"                  "initFields"             
+[47] "initialize"              "initialize#errorHandler"
+[49] "log"                     "maxWindowSize"          
+[51] "mouseMoveToLocation"     "navigate"               
+[53] "open"                    "phantomExecute"         
+[55] "queryRD"                 "quit"                   
+[57] "refresh"                 "screenshot"             
+[59] "sendKeysToActiveElement" "sendKeysToAlert"        
+[61] "setAsyncScriptTimeout"   "setImplicitWaitTimeout" 
+[63] "setTimeout"              "setWindowPosition"      
+[65] "setWindowSize"           "show"                   
+[67] "show#envRefClass"        "showErrorClass"         
+[69] "switchToFrame"           "switchToWindow"         
+[71] "trace"                   "untrace"                
+[73] "usingMethods"           
+</pre>
+</p>
+
+<p>
+The URL we visited ("http://www.goes-r.gov/multimedia/sc_images.html") has 
+an array of small images with links to larger versions on flickr.
+The array is dynamically generated via JavaScript. Hence we cannot just
+extract the links to flickr from the HTML.
+Instead, we wait until the browser has constructed the HTML elements dynamically.
+Then we ask the browser for the resulting HTML source for that page and extract the
+links from that. We do this getPageSource() and functions in the XML package.
+<pre><code lang="r">
+zz = d$getPageSource()
+library(XML)
+doc = htmlParse(zz, asText = TRUE)
+ll = getHTMLLinks(doc)
+</code></pre>
+</p>
+<p>
+We could be more specific about which links we want and use an XPath expression to retrieve them.
+For example, we can get the links from the "Download Sizes" text:
+<pre><code lang="r">
+h = getNodeSet(doc, "//a[contains(., 'Download Sizes')]/@href")
+</code></pre>
+Either way, we can get the links we want and then use d$navigate() to visit each one in turn
+and fetch the page and find the link to the image named Original.
+Then we visit that page and find the relevant jpg file in that page 
+within an &lt;img&gt; element and download that.
+We'll write a function to do this.
+<pre><code lang="r">
+getOriginal = 
+function(imgsUrl, out = character())
+{
+   d$navigate(imgsUrl)
+   doc = htmlParse(d$getPageSource(), asText = TRUE)
+   u = unlist(getNodeSet(doc, "//a[contains(., 'Original')]/@href"))
+   u = getRelativeURL(u, imgsUrl)
+     # not using selenium for this next document as its content is not dynamic.
+   doco = htmlParse(getURLContent(u), asText = TRUE)
+   iu = getNodeSet(doco, "//div[@id= 'allsizes-photo']/img/@src")
+
+   binData = getURLContent(iu)
+   if(length(out))
+      writeRawBin(binData, out)
+   binData
+}
+</code></pre>
+(The function writeRawBin() is available from <a href="rawToFile.R">here</a>.)
+We'll also write a little function that creates the name of the local file
+to which we will download the image.
+<pre><code lang="r">
+outFileName =
+function(u, dir = "images")
+   gsub(".*noaasatellites/([0-9]+)/.*", sprintf("%s/\\1.png", dir), u)
+</code></pre>
+
+Now we can apply this to each of the URLs and write the resulting images to a local file.
+<pre><code lang="r">
+h = unname(unlist(h))
+mapply(getOriginal, h, outFileName(h))
+</code></pre>
+</p>
+
+<h2>Alternative Approaches</h2>
+<p>
+There are other ways to do this particular example. We are using it  to illustrate
+the RSelenium approach.
+Having obtained a link to the 'Download Sizes' page, 
+e.g.,
+<pre>
+https://www.flickr.com/photos/noaasatellites/14419891463/sizes/s/
+</pre>
+we might notice that 
+the link to the original is 
+<pre>
+https://www.flickr.com/photos/noaasatellites/14419891463/sizes/o/
+</pre>
+So we can just change the /s/ to /o/ and we can avoid retrieving the page of sized images.
+However, this may not always be so simple in other examples.
+Also, we needed Selenium  to get the initial page of links since these were dynamic.
+But use the most expedient method, expedient in programming time and download time!
+Sometimes this is to not bother to look for a potential pattern in the file names, but
+to program the straightforward mechansim.
+<pre><code lang="r">
+oimgUrls = gsub("/s/$", "/o/", as.character(h))
+out = outFileName(oimgUrls)
+if(!file.exists("images"))
+   dir.create("images")
+mapply(download.file, oimgUrls, out)
+</code></pre>
+
+</body>
+</html>
