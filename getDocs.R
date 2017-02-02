@@ -2,7 +2,7 @@ getDocs =
 function(url, dir = ".", download = TRUE)
 {
    ll = getHTMLLinks(url)
-   urls = grep("\\.(pdf|pptx?|docx?|xlsx?)$", ll, value = TRUE)   
+   urls = grep("\\.(csv|tsv|pdf|pptx?|docx?|xlsx?)$", ll, value = TRUE)   
    urls = getRelativeURL(urls, url)
    if(download) {
      if(!file.exists(dir))
