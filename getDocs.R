@@ -3,7 +3,7 @@ function(url, dir = ".", download = TRUE)
 {
    ll = getHTMLLinks(url)
    urls = grep("\\.(csv|tsv|pdf|pptx?|docx?|xlsx?)$", ll, value = TRUE)
-
+   urls = gsub(" ", "%20", urls)
    urls = getRelativeURL(escapeChars(urls), escapeChars(url))
    if(download) {
      if(!file.exists(dir))
