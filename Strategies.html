@@ -1,0 +1,43 @@
+<html>
+
+<head>
+<title></title>
+<link rel="stylesheet" href="OmegaTech.css"></link>
+<style>
+</style>
+</head>
+
+
+<body>
+The following are general strategies for generic Web pages.
+You have to adapt to each page to scrape its data.
+
+
+
+<p>
+
+<ol>
+<li> Check if there are simple ways to download the data, e.g. a CSV, XLSX, zip, tar or database file.
+
+<li> See if the data are available directly via simple links, e.g. to PDF, DOCX files. These are crawlable,
+but let's get them anyway.  (Use getHTMLLinks())
+
+<li>
+See if the data is in the <b>static</b> HTML document.
+(Use View Page Source or read the documentinto R/Python and examine it.)
+
+<li> If document is dynamic, consider using selenium  (RSelenium for R) to 
+     do "remote control" driving of browser.
+
+<li> Use the Web browser Developer Tools to explore the HTTP requests.
+
+<li> 
+
+<li> For forms, get the names of the parameters in the form and the set of possible values
+
+<li> See if you need to use cookies across calls.  If so, get them from the browser
+  or get them 
+</ol>
+</p>
+</body>
+</html>
