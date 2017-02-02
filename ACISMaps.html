@@ -1,0 +1,186 @@
+<html>
+
+<head>
+<title>Scraping Quasi-Forms</title>
+<link rel="stylesheet" href="highlight/styles/default.css">
+<script src="highlight/highlight.pack.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+<link xmlns="" rel="stylesheet" href="highlight/rhighlight.css">
+<link rel="stylesheet" href="OmegaTech.css"></link>
+</head>
+
+
+<body>
+<body>
+<center><h2>Scraping Forms with Multiple Parameters</h2>
+Duncan Temple Lang
+</center>
+
+<p>
+Consider the URL
+<a href="http://www.hprcc.unl.edu/maps.php?map=ACISClimateMaps">http://www.hprcc.unl.edu/maps.php?map=ACISClimateMaps</a>
+</p>
+
+
+<p>
+We'd like to use the RHTMLForms package, but unfortunately it expects a &lt;form&gt; element which this page does not have.
+However, we can use one of its functions
+<pre><code class="r">
+doc = htmlParse("http://www.hprcc.unl.edu/maps.php?map=ACISClimateMaps")
+e = RHTMLForms:::processFormElements(xmlRoot(doc))
+</code></pre>
+But unfortunately, the elements of the &lt;select&gt; elements are dynamically constructed.
+So we could use RSelenium to read the expanded page after these elements are added.
+Since this is probably the only dynamic part of the page we have to deal with and happens only when
+the page is first rendered, we can visit it in our Web browser and then use its "Save As" option
+which in some browsers (e.g. Google Chrome), will save the expanded version with the added option elements.
+We'll do this.  
+</p>
+
+<p>
+The HTML document is in <a href="High Plains Regional Climate Center.html">High Plains Regional Climate Center.html</a>.
+We read it in R.  Again, there is no &lt;form&gt; element, but we can use the processFormElements() again.
+<pre><code class="r">
+doc = htmlParse("High Plains Regional Climate Center.html")
+e = RHTMLForms:::processFormElements(xmlRoot(doc))
+</code></pre>
+In this case, e is a list with one element and that contains all of the form-related elements for the document.
+</p>
+
+
+<p>
+<pre><code class="r">
+sels = getNodeSet(doc, "//select")
+vals = lapply(sels, function(s) xpathSApply(s, ".//option", xmlGetAttr, "value"))
+</code></pre>
+
+<pre>
+[[1]]
+ [1] "PData"   "PDept"   "PNorm"   "SPIData" "TData"   "TDept"   "C65Data" "C65Dept" "H65Data" "H65Dept"
+
+[[2]]
+ [1] "7d"    "14d"   "30d"   "60d"   "90d"   "6m"    "12m"   "24m"   "36m"   "Grow"  "Sumr"  "Year"  "Month" "Water"
+
+[[3]]
+[1] "Last1m"  "Last3m"  "Last12m"
+
+[[4]]
+ [1] "Jan"    "Feb"    "Mar"    "Apr"    "May"    "Jun"    "Jul"    "Aug"    "Sep"    "Oct"    "Nov"    "Dec"    "JFM"    "FMA"    "MAM"    "AMJ"    "MJJ"    "JJA"    "JAS"   
+[20] "ASO"    "SON"    "OND"    "NDJ"    "DJF"    "AnnJan" "AnnFeb" "AnnMar" "AnnApr" "AnnMay" "AnnJun" "AnnJul" "AnnAug" "AnnSep" "AnnOct" "AnnNov" "AnnDec"
+
+[[5]]
+ [1] "03" "04" "05" "06" "07" "08" "09" "10" "11" "12" "13" "14" "15" "16" "17"
+
+[[6]]
+ [1] "US"       "NWSCR"    "NWSER"    "NWSSR"    "NWSWR"    "NWSSR-E"  "NWSSR-W"  "HPRCC"    "HPRCC-CO" "HPRCC-KS" "HPRCC-IA" "HPRCC-NE" "HPRCC-ND" "HPRCC-MN" "HPRCC-MO"
+[16] "HPRCC-MT" "HPRCC-SD" "HPRCC-WY" "MRCC"     "NRCC"     "SRCC"     "SERCC"    "WRCC"     "WRCC-AK"  "WRCC-HI"  "WRCC-NW"  "WRCC-SW" 
+
+[[7]]
+[1] ""  "d"
+</pre>
+So now we have all the possible inputs. Let's see how they are combined to identify
+the map that we want.
+We use the Web browser's Developer Tools to examine the 
+See <a href="NOAABuoyStation.html">NOAABuoyStation.html</a> for more background on this.
+When we select Precipitation and as the product and "Last 14 Days" for Updated Daily,
+the browser requests the URL
+<pre>
+http://www.hprcc.unl.edu/products/maps/acis/14dPDataUS.png
+</pre>
+
+When we use the month-year Archive selection items, we get a request such as 
+<pre>
+http://www.hprcc.unl.edu/products/maps/acis/6mPDataUS.png
+</pre>
+And changing to the Standardized Precipitation Index in the Product, we get.
+<pre>
+http://www.hprcc.unl.edu/products/maps/acis/Mar14SPIDataUS.png
+</pre>
+and changing the region to the Northeast, we get
+<pre>
+http://www.hprcc.unl.edu/products/maps/acis/nrcc/Mar14SPIDataNRCC.png
+</pre>
+Note that nrcc is a new subdirectory in this request.
+With some more experimenting, it appears that for any region other than the US,
+we add the directory name corresponding to the lower case value of the region's value in the option.
+For example, for the North West Central Region with value NWSCR, we add /nwscr/ before the file name.
+For the West South West (WRCC-SW), we add /wrcc/, removing the -SW.
+<p>
+
+If we also select dot rather than shaded,
+<pre>
+http://www.hprcc.unl.edu/products/maps/acis/nrcc/Mar14SPIDataNRCCd.png
+</pre>
+If we select Latest month/season/year, we get
+<pre>
+http://www.hprcc.unl.edu/products/maps/acis/nrcc/Last3mSPIDataNRCCd.png
+</pre>
+
+We can see how these values are combined in some way to make the name of the file.
+</p>
+
+<p>
+It appears that we take the selected values
+<pre>
+ <Updated Daily><Product><Region>.png
+ <Latest Month><Product><Region>[shaded/dot].png
+ <Archive Month><Archive year><Product><Region>[shaded/dot].png
+</pre>
+</p>
+
+
+<p>
+Matters get more complicated when we look at different Products.
+When we get to Cooling Degree Days, the options for Updated Daily
+actually change to simply Seasonal.
+In these cases, the time period at the start of the file name is "Seas".
+</p>
+
+<p>
+Rather than "guessing" how to combine the values to create the correct file name on the server,
+we can a) find and read the  JavaScript code that creates the file name before submitting the
+request, or b) use RSelenium to select each of the options.
+</p>
+
+<p>
+Let's put names on vals  so we can identify them by these nominal descriptions of their purpose
+<pre><code class="r">
+names(vals) = c("Product", "UpdateDaily", "LatestMonth", "ArchiveMonth", "ArchiveYear", "Region", "Shaded")
+</code></pre>
+</p>
+
+<p>
+So we will deal with UpdateDaily first.
+We need all combinations of UpdateDaily's possible values with those of the Product, the Region and Shaded.
+<pre><code class="r">
+g = expand.grid(vals[["UpdateDaily"]], vals[["Product"]], vals[["Region"]], vals[["Shaded"]])
+</code></pre>
+We can now paste these columns together and add the suffix .png to get the name of the target URL.
+<pre><code class="r">
+files = sprintf("%s%s%s%s.png", g[[1]], g[[2]], g[[3]], g[[4]])
+</code></pre>
+
+Now we can retrieve these and write them to local files
+<pre><code class="r">
+if(!file.exists("images"))
+  dir.create("images")
+ans = mapply(function(u, out)
+                 try(writeRawBin(getURLContent(u, followlocation = TRUE), out)),
+             paste0("http://www.hprcc.unl.edu/products/maps/acis/", files), 
+             sprintf("images/%s", files))
+</code></pre>
+
+
+
+
+</p>
+
+
+
+
+
+
+<p>
+</p>
+</body>
+</html>
