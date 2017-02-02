@@ -1,0 +1,69 @@
+<html>
+
+<head>
+<title></title>
+<link rel="stylesheet" href="OmegaTech.css"></link>
+<style>
+</style>
+</head>
+
+
+<body>
+<p>
+Consider the Web page
+<a href="http://www.goes-r.gov/users/past-2012-01-09.html">http://www.goes-r.gov/users/past-2012-01-09.html</a>.
+The data we want from this are the PDF and PPT(X) files for the presentations.
+These are crawlable.  However, we can also get them easily.
+<pre><code class="r">
+library(XML)
+u = "http://www.goes-r.gov/users/past-2012-01-09.html"
+ll = getHTMLLinks(u)
+urls = grep("\\.pdf|\\.pptx?", ll, value = TRUE)
+</code></pre>
+<pre>
+ [1] "/downloads/tri-brochure.pdf"                        
+ [2] "/downloads/tri-brochure.pdf"                        
+ [3] "/downloads/2012-PG-All-Hands-01-09/CIMSSupdate.pptx"
+ [4] "/downloads/2012-PG-All-Hands-01-09/CIMSSupdate.pdf" 
+ [5] "/downloads/2012-PG-All-Hands-01-09/CIRA.pptx"       
+ [6] "/downloads/2012-PG-All-Hands-01-09/CIRA.pdf"        
+ [7] "/downloads/2012-PG-All-Hands-01-09/SPoRTupdate.ppt" 
+ [8] "/downloads/2012-PG-All-Hands-01-09/SPoRTupdate.pdf" 
+ [9] "/downloads/2012-PG-All-Hands-01-09/JPSS-update.pptx"
+[10] "/downloads/2012-PG-All-Hands-01-09/JPSS-update.pdf" 
+[11] "/downloads/2012-PG-All-Hands-01-09/Szykman.pptx"    
+[12] "/downloads/2012-PG-All-Hands-01-09/Szykman.pdf"     
+</pre>
+First, let's note that these are relative to the original URL.
+We can paste http://www.goes-r.gov in front of these to get the full URLs.
+However, it is a better idea to use getRelativeURL():
+<pre><code class="r">
+urls = getRelativeURL(urls, u)
+</code></pre>
+This achieves the same result but is much more flexible and robust.
+<p>
+Secondly, note the first two. These are in one of the pull-down menus.
+We can just eliminate them in this case. 
+However, in other cases where we need to do this programmatically, we 
+could use an XPath expression to filter these out, i.e. only extract those
+<b>not</b> in an HTML &lt;select&gt; element or that are in a table
+or that are not in a list item (li).
+We have to look at the HTML content to find out which of these criteria is appropriate to match 
+what we want.
+We do this with
+<pre><code class="r">
+doc = htmlParse(u)
+ll = unlist(getNodeSet(doc, "//a[not(ancestor::li)]/@href"))
+</code></pre>
+Then we again subset these for the PDF and PPT(X) files:
+<pre><code class="r">
+urls = grep("\\.pdf|\\.pptx?", ll, value = TRUE)
+</code></pre>
+For this document, we could also have used 
+<pre><code class="r">
+ll = unlist(getNodeSet(doc, "//a[ancestor::table]/@href"))
+</code></pre>
+since all the links are within a table.
+</p>
+</body>
+</html>
