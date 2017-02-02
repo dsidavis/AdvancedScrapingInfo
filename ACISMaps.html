@@ -169,13 +169,64 @@ ans = mapply(function(u, out)
              paste0("http://www.hprcc.unl.edu/products/maps/acis/", files), 
              sprintf("images/%s", files))
 </code></pre>
-
-
-
-
 </p>
 
 
+
+<h2>Via RSelenium</h2>
+
+<pre><code class="r">
+library(RSelenium)
+d = remoteDriver(port = 5556, browserName = "firefox")
+d$open()
+d$navigate("http://www.hprcc.unl.edu/maps.php?map=ACISClimateMaps")
+</code></pre>
+
+Let's click on the "Last 14 days", i.e. the option with the value 14d.
+We find this in the document selenium is controlling with an XPath query
+<pre><code class="r">
+el = d$findElement("xpath", "//option[@value = '14d']")
+</code></pre>
+and now we can click on it with
+<pre><code class="r">
+el$clickElement()
+</code></pre>
+That immediately causes the image to be updated.
+However, it is not obvious how we can get the raw binary data for the image from selenium.
+So instead, we'll ask for the src attribute on the &lt;img&gt; node.
+We have to find that first.  We'll find all the img elements in the HTML document with
+<pre><code class="r">
+doc = htmlParse(d$getPageSource(), asText = TRUE)
+getNodeSet(doc, "//img")
+</code></pre>
+<pre>
+[[1]]
+<img id="hprcc-logo" src="/images/header/HPRCC_Bug_RGB.png"/> 
+
+[[2]]
+<img id="hprcc-banner" src="/images/header/HomePage-AgateFossilBeds-2011-banner.png"/> 
+
+[[3]]
+<img class="staticproduct" src="/products/maps/acis/30dPDataUS.png" onerror="this.src='/images/No-Image-Available.jpg';"/> 
+
+[[4]]
+<img id="hprcc-logo-footer" src="/images/footer/HPRCC_1_RGB.png" valign="bottom" align="right"/> 
+
+attr(,"class")
+[1] "XMLNodeSet"
+</pre>
+The third one is the one we want and its class is staticproduct. So we'll use XPath to get that element:
+<pre><code class="r">
+i = d$findElement(, "//img[@class = 'staticproduct']")
+</code></pre>
+And now  getElementAttribute() will give us the URL of the current image file being displayed
+<pre><code class="r">
+u = i$getElementAttribute("src")
+</code></pre>
+So we can retrieve this with
+<pre><code class="r">
+download.file(u[[1]], basename(u[[1]]))
+</code></pre>
 
 
 
