@@ -2,8 +2,9 @@ getDocs =
 function(url, dir = ".", download = TRUE)
 {
    ll = getHTMLLinks(url)
-   urls = grep("\\.(csv|tsv|pdf|pptx?|docx?|xlsx?)$", ll, value = TRUE)   
-   urls = getRelativeURL(urls, url)
+   urls = grep("\\.(csv|tsv|pdf|pptx?|docx?|xlsx?)$", ll, value = TRUE)
+
+   urls = getRelativeURL(escapeChars(urls), escapeChars(url))
    if(download) {
      if(!file.exists(dir))
          dir.create(dir)
@@ -13,3 +14,10 @@ function(url, dir = ".", download = TRUE)
    } else
      urls
 }
+
+escapeChars =
+function(urls)
+{
+ gsub(" ", "%32", urls)
+}
+
